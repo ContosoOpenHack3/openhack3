@@ -5,7 +5,14 @@
 			{
 				"name": "Order",
 				"type": "Copy",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "OrderDetail",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -23,7 +30,8 @@
 					},
 					"sink": {
 						"type": "CosmosDbSqlApiSink",
-						"writeBehavior": "insert"
+						"writeBehavior": "insert",
+						"disableMetricsCollection": false
 					},
 					"enableStaging": false
 				},
@@ -43,14 +51,7 @@
 			{
 				"name": "OrderDetail",
 				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "Order",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,

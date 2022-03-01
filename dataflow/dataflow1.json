@@ -1,0 +1,24 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"linkedService": {
+						"referenceName": "AzureSqlDatabase1",
+						"type": "LinkedServiceReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "parse1"
+				}
+			],
+			"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'query',\n\tstore: 'sqlserver',\n\tquery: 'SELECT   [dbo].[Orders].orderID , \\nOrderDate, \\nFirstName, \\nLastName, \\nAddress,\\nCity, \\nState, \\nPostalCode, \\nCountry, \\nPhone, \\nSMSOptin, \\nSMSStatus, \\nOrders.Email, \\nReceiptUrl,\\nTotal, \\nPaymentTransactionId,\\nHasBeenShipped,\\n    (\\n        SELECT OrderDetailId,\\nProductId,\\nQuantity,\\nUnitPrice \\n        FROM [dbo].[OrderDetails]  \\n\t\twhere [dbo].[Orders].orderid = [dbo].[OrderDetails].orderid\\n        FOR JSON auto\\n    ) AS [OrderDetails]\\nFROM [dbo].[Orders]  \\nFOR JSON PATH, ROOT(\\'orderid\\')\\n',\n\tisolationLevel: 'READ_UNCOMMITTED') ~> source1\nsource1 parse(format: 'json',\n\tdocumentForm: 'documentPerLine') ~> parse1"
+		}
+	}
+}

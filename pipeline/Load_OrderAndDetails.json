@@ -30,7 +30,7 @@
 							"typeProperties": {
 								"variableName": "y",
 								"value": {
-									"value": "@activity('Lookup1').output",
+									"value": "@activity('lookup1').output.value",
 									"type": "Expression"
 								}
 							}

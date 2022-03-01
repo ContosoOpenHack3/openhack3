@@ -1,0 +1,9 @@
+{
+	"name": "team3consosoadf",
+	"location": "northeurope",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "613514a2-3790-4d50-948b-237240c3b0cb",
+		"tenantId": "d8fec30b-30d4-49a0-a3a8-8ef5ffd0e545"
+	}
+}

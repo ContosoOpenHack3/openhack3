@@ -1,0 +1,15 @@
+{
+	"name": "OrderAndDetail_Cosmos",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CosmosDb1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "CosmosDbSqlApiCollection",
+		"schema": {},
+		"typeProperties": {
+			"collectionName": "OrderAndDetails"
+		}
+	}
+}

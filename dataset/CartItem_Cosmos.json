@@ -1,0 +1,16 @@
+{
+	"name": "CartItem_Cosmos",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Contoso",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "CosmosDbSqlApiCollection",
+		"schema": {},
+		"typeProperties": {
+			"collectionName": "CartItem"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

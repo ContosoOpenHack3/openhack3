@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "CartItem",
+				"name": "User",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -28,13 +28,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "AzureSqlTable1",
+						"referenceName": "User_SQL",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "CosmosDbSqlApiCollection1",
+						"referenceName": "User_Cosmos",
 						"type": "DatasetReference"
 					}
 				]
@@ -65,20 +65,57 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "AzureSqlTable1",
+						"referenceName": "Category_SQL",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "CosmosDbSqlApiCollection1",
+						"referenceName": "Category_Cosmos",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Cartitem",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "CosmosDbSqlApiSink",
+						"writeBehavior": "insert"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Cartitem_SQL",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "CartItem_Cosmos",
 						"type": "DatasetReference"
 					}
 				]
 			}
 		],
 		"annotations": [],
-		"lastPublishTime": "2022-03-01T09:40:09Z"
+		"lastPublishTime": "2022-03-01T10:17:41Z"
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }

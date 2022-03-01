@@ -5,6 +5,9 @@
 		"factoryName": {
 			"value": "team3consosoadf"
 		},
+		"AzureDataLakeStorage1_accountKey": {
+			"value": ""
+		},
 		"AzureSqlDatabase1_connectionString": {
 			"value": ""
 		},
@@ -13,6 +16,15 @@
 		},
 		"CosmosDb1_connectionString": {
 			"value": ""
+		},
+		"JsonBlobStorage_connectionString": {
+			"value": ""
+		},
+		"AzureBlobStorage1_properties_typeProperties_serviceEndpoint": {
+			"value": "https://openhackstorageaccount.blob.core.windows.net"
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"value": "https://openhackstorageaccount.dfs.core.windows.net"
 		}
 	}
 }

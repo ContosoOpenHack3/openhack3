@@ -14,128 +14,24 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": [
-					{
-						"name": "Source",
-						"value": "."
-					},
-					{
-						"name": "Destination",
-						"value": "jsontest//docs.json"
-					}
-				],
+				"userProperties": [],
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT   [dbo].[Orders].orderID , \nOrderDate, \nFirstName, \nLastName, \nAddress,\nCity, \nState, \nPostalCode, \nCountry, \nPhone, \nSMSOptin, \nSMSStatus, \nOrders.Email, \nReceiptUrl,\nTotal, \nPaymentTransactionId,\nHasBeenShipped,\n    (\n        SELECT OrderDetailId,\nProductId,\nQuantity,\nUnitPrice \n        FROM [dbo].[OrderDetails]  \n\t\twhere [dbo].[Orders].orderid = [dbo].[OrderDetails].orderid\n        FOR JSON auto\n    ) AS [OrderDetails]\nFROM [dbo].[Orders]  \nFOR     JSON auto\n",
+						"sqlReaderQuery": "select [Orders].orderID , \nOrderDate, \nFirstName, \nLastName, \nAddress,\nCity, \nState, \nPostalCode, \nCountry, \nPhone, \nSMSOptin, \nSMSStatus, \nOrders.Email, \nReceiptUrl,\nTotal, \nPaymentTransactionId,\nHasBeenShipped,\nOrderDetailId,\nProductId,\nQuantity,\nUnitPrice\nfrom orders\n    join [dbo].[OrderDetails]\n\ton  [dbo].[OrderDetails].orderid = [dbo].[Orders].orderid\nFOR JSON AUTO",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
 					"sink": {
-						"type": "CosmosDbSqlApiSink",
-						"writeBehavior": "insert"
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings"
+						}
 					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"mappings": [
-							{
-								"sink": {
-									"path": "$['orderID']"
-								}
-							},
-							{
-								"sink": {
-									"path": "$['OrderDate']"
-								}
-							},
-							{
-								"sink": {
-									"path": "$['FirstName']"
-								}
-							},
-							{
-								"sink": {
-									"path": "$['LastName']"
-								}
-							},
-							{
-								"sink": {
-									"path": "$['Address']"
-								}
-							},
-							{
-								"sink": {
-									"path": "$['City']"
-								}
-							},
-							{
-								"sink": {
-									"path": "$['State']"
-								}
-							},
-							{
-								"sink": {
-									"path": "$['PostalCode']"
-								}
-							},
-							{
-								"sink": {
-									"path": "$['Country']"
-								}
-							},
-							{
-								"sink": {
-									"path": "$['Phone']"
-								}
-							},
-							{
-								"sink": {
-									"path": "$['SMSOptin']"
-								}
-							},
-							{
-								"sink": {
-									"path": "$['Email']"
-								}
-							},
-							{
-								"sink": {
-									"path": "$['Total']"
-								}
-							},
-							{
-								"sink": {
-									"path": "$['PaymentTransactionId']"
-								}
-							},
-							{
-								"sink": {
-									"path": "$['HasBeenShipped']"
-								}
-							},
-							{
-								"sink": {
-									"path": "$['OrderDetails'][0]['OrderDetailId']"
-								}
-							},
-							{
-								"sink": {
-									"path": "$['OrderDetails'][0]['ProductId']"
-								}
-							},
-							{
-								"sink": {
-									"path": "$['OrderDetails'][0]['Quantity']"
-								}
-							},
-							{
-								"sink": {
-									"path": "$['OrderDetails'][0]['UnitPrice']"
-								}
-							}
-						]
-					}
+					"enableStaging": false
 				},
 				"inputs": [
 					{
@@ -145,7 +41,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "OrderAndDetail_Cosmos",
+						"referenceName": "Json2",
 						"type": "DatasetReference"
 					}
 				]

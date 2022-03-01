@@ -200,96 +200,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Load_OrderAndDetails')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Orders and Details are in same colletion but each has own document type attribute.",
-				"activities": [
-					{
-						"name": "ForEach1",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Lookup1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Lookup1').output.value",
-								"type": "Expression"
-							},
-							"isSequential": true,
-							"activities": [
-								{
-									"name": "Set variable1",
-									"type": "SetVariable",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "y",
-										"value": {
-											"value": "@activity('lookup1').output.value",
-											"type": "Expression"
-										}
-									}
-								}
-							]
-						}
-					},
-					{
-						"name": "Lookup1",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT   [dbo].[Orders].orderID , \nOrderDate, \nFirstName, \nLastName, \nAddress,\nCity, \nState, \nPostalCode, \nCountry, \nPhone, \nSMSOptin, \nSMSStatus, \nOrders.Email, \nReceiptUrl,\nTotal, \nPaymentTransactionId,\nHasBeenShipped,\n    (\n        SELECT OrderDetailId,\nProductId,\nQuantity,\nUnitPrice \n        FROM [dbo].[OrderDetails]  \n\t\twhere [dbo].[Orders].orderid = [dbo].[OrderDetails].orderid\n        FOR JSON auto\n    ) AS [OrderDetails]\nFROM [dbo].[Orders]  \nFOR JSON Auto\n",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "AzureSqlTable1",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": false
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"parameters": {
-					"x": {
-						"type": "string"
-					}
-				},
-				"variables": {
-					"y": {
-						"type": "Array"
-					}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/AzureSqlTable1')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/Main')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -706,6 +616,26 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/CosmosDbSqlApiOrders1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "CosmosDb1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "CosmosDbSqlApiCollection",
+				"schema": {},
+				"typeProperties": {
+					"collectionName": "orders2"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/CosmosDb1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DelimitedText1')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -768,130 +698,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Json1')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "JsonBlobStorage",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Json",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "docs.json",
-						"container": "jsontest"
-					}
-				},
-				"schema": {
-					"type": "object",
-					"properties": {
-						"": {
-							"type": "string"
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/JsonBlobStorage')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Json2')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureDataLakeStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Json",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "docs.json",
-						"fileSystem": "jsontest"
-					}
-				},
-				"schema": {
-					"type": "object",
-					"properties": {
-						"orderID": {
-							"type": "integer"
-						},
-						"OrderDate": {
-							"type": "string"
-						},
-						"FirstName": {
-							"type": "string"
-						},
-						"LastName": {
-							"type": "string"
-						},
-						"Address": {
-							"type": "string"
-						},
-						"City": {
-							"type": "string"
-						},
-						"State": {
-							"type": "string"
-						},
-						"PostalCode": {
-							"type": "string"
-						},
-						"Country": {
-							"type": "string"
-						},
-						"Phone": {
-							"type": "string"
-						},
-						"SMSOptin": {
-							"type": "boolean"
-						},
-						"Email": {
-							"type": "string"
-						},
-						"Total": {
-							"type": "number"
-						},
-						"PaymentTransactionId": {
-							"type": "string"
-						},
-						"HasBeenShipped": {
-							"type": "boolean"
-						},
-						"OrderDetails": {
-							"type": "array",
-							"items": {
-								"type": "object",
-								"properties": {
-									"OrderDetailId": {
-										"type": "integer"
-									},
-									"ProductId": {
-										"type": "integer"
-									},
-									"Quantity": {
-										"type": "integer"
-									},
-									"UnitPrice": {
-										"type": "number"
-									}
-								}
-							}
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage1')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/OrderAndDetail_Cosmos')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -904,7 +710,7 @@
 				"type": "CosmosDbSqlApiCollection",
 				"schema": {},
 				"typeProperties": {
-					"collectionName": "orderswithdetailspipline"
+					"collectionName": "OrderswithDetails"
 				}
 			},
 			"dependsOn": [
@@ -1136,6 +942,137 @@
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/SalesHeader1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "SalesOrderID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "RevisionNumber",
+						"type": "tinyint",
+						"precision": 3
+					},
+					{
+						"name": "OrderDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "DueDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "ShipDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "Status",
+						"type": "tinyint",
+						"precision": 3
+					},
+					{
+						"name": "OnlineOrderFlag",
+						"type": "bit"
+					},
+					{
+						"name": "SalesOrderNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PurchaseOrderNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "AccountNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CustomerID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ShipToAddressID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "BillToAddressID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ShipMethod",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CreditCardApprovalCode",
+						"type": "varchar"
+					},
+					{
+						"name": "SubTotal",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "TaxAmt",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Freight",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "TotalDue",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Comment",
+						"type": "nvarchar"
+					},
+					{
+						"name": "rowguid",
+						"type": "uniqueidentifier"
+					},
+					{
+						"name": "ModifiedDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"tableName": "[[SalesLT].[SalesOrderHeader]"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SalesHeader2')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1524,6 +1461,76 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/orderdetails2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "SalesOrderID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "SalesOrderDetailID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "OrderQty",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "ProductID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "UnitPrice",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "UnitPriceDiscount",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "LineTotal",
+						"type": "decimal",
+						"precision": 38,
+						"scale": 6
+					},
+					{
+						"name": "rowguid",
+						"type": "uniqueidentifier"
+					},
+					{
+						"name": "ModifiedDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "SalesLT",
+					"table": "SalesOrderDetail"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage1')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -1646,19 +1653,16 @@
 							"name": "JoinIt"
 						},
 						{
-							"name": "ValueScrubber"
-						},
-						{
-							"name": "CreateArrays"
-						},
-						{
-							"name": "MakeStruct"
-						},
-						{
 							"name": "Typecast"
+						},
+						{
+							"name": "derivedColumn1"
+						},
+						{
+							"name": "aggregate1"
 						}
 					],
-					"script": "source(output(\n\t\tOrderDetailId as integer,\n\t\tOrderId as integer,\n\t\tEmail as string,\n\t\tProductId as integer,\n\t\tQuantity as integer,\n\t\tUnitPrice as decimal(18,2)\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'select * from orderdetails',\n\tformat: 'query') ~> SourceOrderDetails\nsource(output(\n\t\tOrderId as integer,\n\t\tOrderDate as timestamp,\n\t\tFirstName as string,\n\t\tLastName as string,\n\t\tAddress as string,\n\t\tCity as string,\n\t\tState as string,\n\t\tPostalCode as string,\n\t\tCountry as string,\n\t\tPhone as string,\n\t\tSMSOptIn as boolean,\n\t\tSMSStatus as string,\n\t\tEmail as string,\n\t\tReceiptUrl as string,\n\t\tTotal as decimal(18,2),\n\t\tPaymentTransactionId as string,\n\t\tHasBeenShipped as boolean\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'select * from orders',\n\tformat: 'query') ~> SourceOrderHeader\nJoinIt select(mapColumn(\n\t\tOrderId = SourceOrderHeader@OrderId,\n\t\tOrderDate,\n\t\tFirstName,\n\t\tLastName,\n\t\tAddress,\n\t\tCity,\n\t\tState,\n\t\tPostalCode,\n\t\tCountry,\n\t\tPhone,\n\t\tSMSOptIn,\n\t\tSMSStatus,\n\t\tEmail = SourceOrderHeader@Email,\n\t\tReceiptUrl,\n\t\tTotal,\n\t\tPaymentTransactionId,\n\t\tHasBeenShipped,\n\t\tProductId,\n\t\tQuantity,\n\t\tUnitPrice,\n\t\torderdetailsstruct\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> ColumnScrubber\nSourceOrderHeader, MakeStruct join(SourceOrderHeader@OrderId == SourceOrderDetails@OrderId,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> JoinIt\nColumnScrubber derive(Total = toDouble(round(Total,2))) ~> ValueScrubber\nValueScrubber aggregate(groupBy(OrderHeaderId = OrderId),\n\tdetails = collect(orderdetailsstruct),\n\t\teach(match(instr(name,'OrderQty')==0&&instr(name,'UnitPrice')==0&&instr(name,'SalesOrderID')==0), $$ = first($$))) ~> CreateArrays\nTypecast derive(orderdetailsstruct = @(orderqty=Quantity,\n\t\tunitcost=UnitPrice,\n\t\tsalesorderdetailid=OrderDetailId,\n\t\tproductId=ProductId)) ~> MakeStruct\nSourceOrderDetails derive(UnitPrice = toDouble(round(UnitPrice,2))) ~> Typecast\nCreateArrays sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\trecreate:true,\n\tformat: 'document',\n\tpartitionKey: ['/SalesOrderID'],\n\tthroughput: 2000,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tmapColumn(\n\t\tOrderHeaderId,\n\t\tdetails,\n\t\tOrderId,\n\t\tOrderDate,\n\t\tFirstName,\n\t\tLastName,\n\t\tAddress,\n\t\tCity,\n\t\tState,\n\t\tPostalCode,\n\t\tCountry,\n\t\tPhone,\n\t\tSMSOptIn,\n\t\tSMSStatus,\n\t\tEmail,\n\t\tReceiptUrl,\n\t\tTotal,\n\t\tPaymentTransactionId,\n\t\tHasBeenShipped,\n\t\tProductId,\n\t\tQuantity,\n\t\torderdetailsstruct\n\t),\n\tpartitionBy('hash', 1)) ~> SinktoCosmosDB"
+					"script": "source(output(\n\t\tOrderDetailId as integer,\n\t\tOrderId as integer,\n\t\tEmail as string,\n\t\tProductId as integer,\n\t\tQuantity as integer,\n\t\tUnitPrice as decimal(18,2)\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'select * from orderdetails',\n\tformat: 'query',\n\tpartitionBy('roundRobin', 4)) ~> SourceOrderDetails\nsource(output(\n\t\tOrderId as integer,\n\t\tOrderDate as timestamp,\n\t\tFirstName as string,\n\t\tLastName as string,\n\t\tAddress as string,\n\t\tCity as string,\n\t\tState as string,\n\t\tPostalCode as string,\n\t\tCountry as string,\n\t\tPhone as string,\n\t\tSMSOptIn as boolean,\n\t\tSMSStatus as string,\n\t\tEmail as string,\n\t\tReceiptUrl as string,\n\t\tTotal as decimal(18,2),\n\t\tPaymentTransactionId as string,\n\t\tHasBeenShipped as boolean\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'select * from orders',\n\tformat: 'query',\n\tpartitionBy('roundRobin', 4)) ~> SourceOrderHeader\nJoinIt select(mapColumn(\n\t\tOrderId = SourceOrderHeader@OrderId,\n\t\tOrderDate,\n\t\tFirstName,\n\t\tLastName,\n\t\tAddress,\n\t\tCity,\n\t\tState,\n\t\tPostalCode,\n\t\tCountry,\n\t\tPhone,\n\t\tSMSOptIn,\n\t\tSMSStatus,\n\t\tEmail = SourceOrderHeader@Email,\n\t\tReceiptUrl,\n\t\tTotal,\n\t\tPaymentTransactionId,\n\t\tHasBeenShipped,\n\t\tOrderDetailId,\n\t\tProductId,\n\t\tQuantity,\n\t\tUnitPrice,\n\t\tStructOrderDetails\n\t),\n\tpartitionBy('roundRobin', 4),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> ColumnScrubber\nSourceOrderHeader, derivedColumn1 join(SourceOrderHeader@OrderId == SourceOrderDetails@OrderId,\n\tjoinType:'inner',\n\tpartitionBy('roundRobin', 4),\n\tbroadcast: 'auto')~> JoinIt\nSourceOrderDetails derive(UnitPrice = toDouble(round(UnitPrice,2)),\n\tpartitionBy('roundRobin', 4)) ~> Typecast\nTypecast derive(StructOrderDetails = @(OrderDetailId=OrderDetailId,\n\t\tProductId=ProductId,\n\t\tQuantity=Quantity,\n\t\tUnitPrice=UnitPrice)) ~> derivedColumn1\nColumnScrubber aggregate(groupBy(OrderId,\n\t\tFirstName,\n\t\tLastName,\n\t\tOrderDate,\n\t\tAddress,\n\t\tCity,\n\t\tState,\n\t\tPostalCode,\n\t\tCountry,\n\t\tPhone,\n\t\tSMSOptIn,\n\t\tSMSStatus,\n\t\tEmail,\n\t\tReceiptUrl,\n\t\tTotal,\n\t\tPaymentTransactionId,\n\t\tHasBeenShipped),\n\tordersdetails = collect(StructOrderDetails)) ~> aggregate1\naggregate1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\trecreate:true,\n\tformat: 'document',\n\tpartitionKey: ['/orderID'],\n\tthroughput: 2000,\n\tskipDuplicateMapInputs: true,\n\tsaveOrder: 1,\n\tmapColumn(\n\t\torderID = OrderId,\n\t\tFirstName,\n\t\tLastName,\n\t\tOrderDate,\n\t\tAddress,\n\t\tCity,\n\t\tState,\n\t\tPostalCode,\n\t\tCountry,\n\t\tPhone,\n\t\tSMSOptIn,\n\t\tSMSStatus,\n\t\tEmail,\n\t\tReceiptUrl,\n\t\tTotal,\n\t\tPaymentTransactionId,\n\t\tHasBeenShipped,\n\t\torderDetails = ordersdetails\n\t),\n\tpartitionBy('roundRobin', 4)) ~> SinktoCosmosDB"
 				}
 			},
 			"dependsOn": [

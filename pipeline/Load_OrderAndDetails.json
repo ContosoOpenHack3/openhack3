@@ -5,14 +5,7 @@
 			{
 				"name": "Order",
 				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "OrderDetail",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -51,7 +44,14 @@
 			{
 				"name": "OrderDetail",
 				"type": "Copy",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Order",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,

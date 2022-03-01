@@ -4,7 +4,7 @@
 		"description": "Orders and Details are in same colletion but each has own document type attribute.",
 		"activities": [
 			{
-				"name": "Order",
+				"name": "Copy data1",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -17,7 +17,7 @@
 				"userProperties": [
 					{
 						"name": "Source",
-						"value": "dbo.Orders"
+						"value": "."
 					},
 					{
 						"name": "Destination",
@@ -27,31 +27,25 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "DECLARE @Result as varchar(max)\nSET @Result =\n(\n\nSELECT   [dbo].[Orders].orderID , \nOrderDate, \nFirstName, \nLastName, \nAddress,\nCity, \nState, \nPostalCode, \nCountry, \nPhone, \nSMSOptin, \nSMSStatus, \nOrders.Email, \nReceiptUrl,\nTotal, \nPaymentTransactionId,\nHasBeenShipped,\n    (\n        SELECT OrderDetailId,\nProductId,\nQuantity,\nUnitPrice \n        FROM [dbo].[OrderDetails]  \n\t\twhere [dbo].[Orders].orderid = [dbo].[OrderDetails].orderid\n        FOR JSON auto\n    ) AS [OrderDetails]\nFROM [dbo].[Orders]  \nFOR JSON PATH, ROOT('orderid')\n\n\n)\n\nselect  @Result \n",
+						"sqlReaderQuery": "SELECT   [dbo].[Orders].orderID , \nOrderDate, \nFirstName, \nLastName, \nAddress,\nCity, \nState, \nPostalCode, \nCountry, \nPhone, \nSMSOptin, \nSMSStatus, \nOrders.Email, \nReceiptUrl,\nTotal, \nPaymentTransactionId,\nHasBeenShipped,\n    (\n        SELECT OrderDetailId,\nProductId,\nQuantity,\nUnitPrice \n        FROM [dbo].[OrderDetails]  \n\t\twhere [dbo].[Orders].orderid = [dbo].[OrderDetails].orderid\n        FOR JSON auto\n    ) AS [OrderDetails]\nFROM [dbo].[Orders]  \nFOR JSON  auto\n",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
 					"sink": {
-						"type": "JsonSink",
-						"storeSettings": {
-							"type": "AzureBlobStorageWriteSettings"
-						},
-						"formatSettings": {
-							"type": "JsonWriteSettings",
-							"filePattern": "arrayOfObjects"
-						}
+						"type": "CosmosDbSqlApiSink",
+						"writeBehavior": "insert"
 					},
 					"enableStaging": false
 				},
 				"inputs": [
 					{
-						"referenceName": "Orders_SQL",
+						"referenceName": "AzureSqlTable1",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "Json1",
+						"referenceName": "OrderAndDetail_Cosmos",
 						"type": "DatasetReference"
 					}
 				]

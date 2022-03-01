@@ -4,8 +4,43 @@
 		"description": "Orders and Details are in same colletion but each has own document type attribute.",
 		"activities": [
 			{
-				"name": "Copy data1",
-				"type": "Copy",
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Lookup1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup1').output.value",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Set variable1",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "y",
+								"value": {
+									"value": "@activity('Lookup1').output",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Lookup1",
+				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
@@ -14,16 +49,7 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": [
-					{
-						"name": "Source",
-						"value": "."
-					},
-					{
-						"name": "Destination",
-						"value": "jsontest//docs.json"
-					}
-				],
+				"userProperties": [],
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
@@ -31,32 +57,24 @@
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
-					"sink": {
-						"type": "JsonSink",
-						"storeSettings": {
-							"type": "AzureBlobFSWriteSettings"
-						},
-						"formatSettings": {
-							"type": "JsonWriteSettings",
-							"filePattern": "arrayOfObjects"
-						}
-					},
-					"enableStaging": false
-				},
-				"inputs": [
-					{
+					"dataset": {
 						"referenceName": "AzureSqlTable1",
 						"type": "DatasetReference"
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "Json2",
-						"type": "DatasetReference"
-					}
-				]
+					},
+					"firstRowOnly": false
+				}
 			}
 		],
+		"parameters": {
+			"x": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"y": {
+				"type": "String"
+			}
+		},
 		"annotations": []
 	}
 }

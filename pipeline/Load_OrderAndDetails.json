@@ -1,6 +1,7 @@
 {
 	"name": "Load_OrderAndDetails",
 	"properties": {
+		"description": "Orders and Details are in same colletion but each has own document type attribute.",
 		"activities": [
 			{
 				"name": "Order",

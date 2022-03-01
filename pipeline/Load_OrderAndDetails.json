@@ -53,7 +53,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "select [Orders].orderID , \nOrderDate, \nFirstName, \nLastName, \nAddress,\nCity, \nState, \nPostalCode, \nCountry, \nPhone, \nSMSOptin, \nSMSStatus, \nOrders.Email, \nReceiptUrl,\nTotal, \nPaymentTransactionId,\nHasBeenShipped,\nOrderDetailId,\nProductId,\nQuantity,\nUnitPrice\nfrom orders\n    join [dbo].[OrderDetails]\n\ton  [dbo].[OrderDetails].orderid = [dbo].[Orders].orderid\nFOR JSON AUTO",
+						"sqlReaderQuery": "SELECT   [dbo].[Orders].orderID , \nOrderDate, \nFirstName, \nLastName, \nAddress,\nCity, \nState, \nPostalCode, \nCountry, \nPhone, \nSMSOptin, \nSMSStatus, \nOrders.Email, \nReceiptUrl,\nTotal, \nPaymentTransactionId,\nHasBeenShipped,\n    (\n        SELECT OrderDetailId,\nProductId,\nQuantity,\nUnitPrice \n        FROM [dbo].[OrderDetails]  \n\t\twhere [dbo].[Orders].orderid = [dbo].[OrderDetails].orderid\n        FOR JSON auto\n    ) AS [OrderDetails]\nFROM [dbo].[Orders]  \nFOR JSON Auto\n",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -72,7 +72,7 @@
 		},
 		"variables": {
 			"y": {
-				"type": "String"
+				"type": "Array"
 			}
 		},
 		"annotations": []

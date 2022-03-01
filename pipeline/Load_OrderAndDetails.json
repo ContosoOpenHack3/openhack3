@@ -14,11 +14,20 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": [],
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "dbo.Orders"
+					},
+					{
+						"name": "Destination",
+						"value": "jsontest//docs.json"
+					}
+				],
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "DECLARE @Result as varchar(max)\nSET @Result =\n(\n\nSELECT   [dbo].[Orders].orderID , \nOrderDate, \nFirstName, \nLastName, \nAddress,\nCity, \nState, \nPostalCode, \nCountry, \nPhone, \nSMSOptin, \nSMSStatus, \nOrders.Email, \nReceiptUrl,\nTotal, \nPaymentTransactionId,\nHasBeenShipped,\n    (\n        SELECT OrderDetailId,\nProductId,\nQuantity,\nUnitPrice \n        FROM [dbo].[OrderDetails]  \n\t\twhere [dbo].[Orders].orderid = [dbo].[OrderDetails].orderid\n        FOR JSON auto\n    ) AS [OrderDetails]\nFROM [dbo].[Orders]  \nFOR JSON PATH, ROOT('orderid')\n\n\n)\n\nselect  '[' + @Result ']'\n\n",
+						"sqlReaderQuery": "DECLARE @Result as varchar(max)\nSET @Result =\n(\n\nSELECT   [dbo].[Orders].orderID , \nOrderDate, \nFirstName, \nLastName, \nAddress,\nCity, \nState, \nPostalCode, \nCountry, \nPhone, \nSMSOptin, \nSMSStatus, \nOrders.Email, \nReceiptUrl,\nTotal, \nPaymentTransactionId,\nHasBeenShipped,\n    (\n        SELECT OrderDetailId,\nProductId,\nQuantity,\nUnitPrice \n        FROM [dbo].[OrderDetails]  \n\t\twhere [dbo].[Orders].orderid = [dbo].[OrderDetails].orderid\n        FOR JSON auto\n    ) AS [OrderDetails]\nFROM [dbo].[Orders]  \nFOR JSON PATH, ROOT('orderid')\n\n\n)\n\nselect  @Result \n",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -28,7 +37,8 @@
 							"type": "AzureBlobStorageWriteSettings"
 						},
 						"formatSettings": {
-							"type": "JsonWriteSettings"
+							"type": "JsonWriteSettings",
+							"filePattern": "arrayOfObjects"
 						}
 					},
 					"enableStaging": false
@@ -45,29 +55,6 @@
 						"type": "DatasetReference"
 					}
 				]
-			},
-			{
-				"name": "Copy data1",
-				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "Order",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"enableStaging": false
-				}
 			}
 		],
 		"annotations": []

@@ -18,7 +18,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT *, 'Orders' as Type FROM [dbo].[Orders]",
+						"sqlReaderQuery": "\nSELECT   [dbo].[Orders].orderID , \nOrderDate, \nFirstName, \nLastName, \nAddress,\nCity, \nState, \nPostalCode, \nCountry, \nPhone, \nSMSOptin, \nSMSStatus, \nOrders.Email, \nReceiptUrl,\nTotal, \nPaymentTransactionId,\nHasBeenShipped,\n    (\n        SELECT OrderDetailId,\nProductId,\nQuantity,\nUnitPrice \n        FROM [dbo].[OrderDetails]  \n\t\twhere [dbo].[Orders].orderid = [dbo].[OrderDetails].orderid\n        FOR JSON auto\n    ) AS [OrderDetails]\nFROM [dbo].[Orders]  \n\n",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -26,51 +26,6 @@
 						"type": "CosmosDbSqlApiSink",
 						"writeBehavior": "insert",
 						"disableMetricsCollection": false
-					},
-					"enableStaging": false
-				},
-				"inputs": [
-					{
-						"referenceName": "Orders_SQL",
-						"type": "DatasetReference"
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "OrderAndDetail_Cosmos",
-						"type": "DatasetReference"
-					}
-				]
-			},
-			{
-				"name": "OrderDetail",
-				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "Order",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT *, 'OrderDetails' as Type FROM [dbo].[OrderDetails]",
-						"queryTimeout": "02:00:00",
-						"partitionOption": "None"
-					},
-					"sink": {
-						"type": "CosmosDbSqlApiSink",
-						"writeBehavior": "insert"
 					},
 					"enableStaging": false
 				},

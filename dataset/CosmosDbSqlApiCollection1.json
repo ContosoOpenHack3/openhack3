@@ -1,0 +1,73 @@
+{
+	"name": "CosmosDbSqlApiCollection1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CosmosDb1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "CosmosDbSqlApiCollection",
+		"schema": {
+			"type": "object",
+			"properties": {
+				"orderID": {
+					"type": "integer"
+				},
+				"OrderDate": {
+					"type": "string"
+				},
+				"FirstName": {
+					"type": "string"
+				},
+				"LastName": {
+					"type": "string"
+				},
+				"Address": {
+					"type": "string"
+				},
+				"City": {
+					"type": "string"
+				},
+				"State": {
+					"type": "string"
+				},
+				"PostalCode": {
+					"type": "string"
+				},
+				"Country": {
+					"type": "string"
+				},
+				"Phone": {
+					"type": "string"
+				},
+				"SMSOptin": {
+					"type": "boolean"
+				},
+				"SMSStatus": {
+					"type": "null"
+				},
+				"Email": {
+					"type": "string"
+				},
+				"ReceiptUrl": {
+					"type": "null"
+				},
+				"Total": {
+					"type": "number"
+				},
+				"PaymentTransactionId": {
+					"type": "string"
+				},
+				"HasBeenShipped": {
+					"type": "boolean"
+				},
+				"OrderDetails": {
+					"type": "string"
+				}
+			}
+		},
+		"typeProperties": {
+			"collectionName": "OrdersWithDetails"
+		}
+	}
+}

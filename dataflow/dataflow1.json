@@ -12,9 +12,17 @@
 					"name": "source1"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "CosmosDbSqlApiCollection1",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
 			"transformations": [],
-			"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: true,\n\tinferDriftedColumnTypes: true,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'Select [Orders].orderID , \\nOrderDate, \\nFirstName, \\nLastName, \\nAddress,\\nCity, \\nState, \\nPostalCode, \\nCountry, \\nPhone, \\nSMSOptin, \\nSMSStatus, \\nOrders.Email, \\nReceiptUrl,\\nTotal, \\nPaymentTransactionId,\\nHasBeenShipped,\\nOrderDetailId,\\nProductId,\\nQuantity,\\nUnitPrice\\n from [dbo].[Orders], [dbo].[OrderDetails]\\nwhere [dbo].[OrderDetails].orderid = [dbo].[Orders].orderid',\n\tformat: 'query',\n\tpartitionBy('hash', 1)) ~> source1"
+			"script": "source(output(\n\t\torderID as integer,\n\t\tOrderDate as timestamp,\n\t\tFirstName as string,\n\t\tLastName as string,\n\t\tAddress as string,\n\t\tCity as string,\n\t\tState as string,\n\t\tPostalCode as string,\n\t\tCountry as string,\n\t\tPhone as string,\n\t\tSMSOptin as boolean,\n\t\tSMSStatus as string,\n\t\tEmail as string,\n\t\tReceiptUrl as string,\n\t\tTotal as decimal(18,2),\n\t\tPaymentTransactionId as string,\n\t\tHasBeenShipped as boolean,\n\t\tOrderDetailId as integer,\n\t\tProductId as integer,\n\t\tQuantity as integer,\n\t\tUnitPrice as decimal(18,2)\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: true,\n\tinferDriftedColumnTypes: true,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'Select [Orders].orderID , \\nOrderDate, \\nFirstName, \\nLastName, \\nAddress,\\nCity, \\nState, \\nPostalCode, \\nCountry, \\nPhone, \\nSMSOptin, \\nSMSStatus, \\nOrders.Email, \\nReceiptUrl,\\nTotal, \\nPaymentTransactionId,\\nHasBeenShipped,\\nOrderDetailId,\\nProductId,\\nQuantity,\\nUnitPrice\\n from [dbo].[Orders] \\ninner join [dbo].[OrderDetails]\\non [dbo].[OrderDetails].orderid = [dbo].[Orders].orderid',\n\tformat: 'query',\n\tpartitionBy('hash', 1)) ~> source1\nsource1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\torderID as integer,\n\t\tOrderDate as string,\n\t\tFirstName as string,\n\t\tLastName as string,\n\t\tAddress as string,\n\t\tCity as string,\n\t\tState as string,\n\t\tPostalCode as string,\n\t\tCountry as string,\n\t\tPhone as string,\n\t\tSMSOptin as boolean,\n\t\tSMSStatus as string,\n\t\tEmail as string,\n\t\tReceiptUrl as string,\n\t\tTotal as double,\n\t\tPaymentTransactionId as string,\n\t\tHasBeenShipped as boolean,\n\t\tOrderDetails as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\trecreate:true,\n\tformat: 'document',\n\tpartitionKey: ['/orderid'],\n\tthroughput: 4000,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
 		}
 	}
 }

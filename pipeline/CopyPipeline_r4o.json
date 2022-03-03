@@ -1,0 +1,97 @@
+{
+	"name": "CopyPipeline_r4o",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach_r4o",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.cw_items",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy_r4o",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "@{item().source.collectionName}"
+								},
+								{
+									"name": "Destination",
+									"value": "@{item().destination.collectionName}"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "CosmosDbSqlApiSource",
+									"preferredRegions": []
+								},
+								"sink": {
+									"type": "CosmosDbSqlApiSink",
+									"writeBehavior": "insert"
+								},
+								"enableStaging": false,
+								"validateDataConsistency": false
+							},
+							"inputs": [
+								{
+									"referenceName": "SourceDataset_r4o",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_collectionName": "@item().source.collectionName"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DestinationDataset_r4o",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_collectionName": "@item().destination.collectionName"
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"cw_items": {
+				"type": "Array",
+				"defaultValue": [
+					{
+						"source": {
+							"collectionName": "Category"
+						},
+						"destination": {
+							"collectionName": "Category"
+						}
+					},
+					{
+						"source": {
+							"collectionName": "OrdersAndDetails"
+						},
+						"destination": {
+							"collectionName": "OrdersAndDetails"
+						}
+					}
+				]
+			}
+		},
+		"annotations": []
+	}
+}

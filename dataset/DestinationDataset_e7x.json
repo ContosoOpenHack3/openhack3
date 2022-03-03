@@ -1,0 +1,16 @@
+{
+	"name": "DestinationDataset_e7x",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase_EEC",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Item"
+		}
+	}
+}

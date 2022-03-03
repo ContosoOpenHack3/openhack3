@@ -1,0 +1,224 @@
+{
+	"name": "CopyPipeline_f21",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy_f21",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "dbo.Item"
+					},
+					{
+						"name": "Destination",
+						"value": "dbo.Item"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"tableOption": "autoCreate"
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "ItemId",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "ItemId",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "VoteCount",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "VoteCount",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "ProductName",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "ProductName",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ImdbId",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "ImdbId",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "Description",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "Description",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ImagePath",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "ImagePath",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ThumbnailPath",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "ThumbnailPath",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "UnitPrice",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 2,
+									"precision": 18
+								},
+								"sink": {
+									"name": "UnitPrice",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "CategoryId",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "CategoryId",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "Category",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "Category",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Popularity",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 2,
+									"precision": 18
+								},
+								"sink": {
+									"name": "Popularity",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "OriginalLanguage",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "OriginalLanguage",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ReleaseDate",
+									"type": "Date",
+									"physicalType": "date"
+								},
+								"sink": {
+									"name": "ReleaseDate",
+									"type": "Date"
+								}
+							},
+							{
+								"source": {
+									"name": "VoteAverage",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 2,
+									"precision": 18
+								},
+								"sink": {
+									"name": "VoteAverage",
+									"type": "Decimal"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_f21",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_f21",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": []
+	}
+}

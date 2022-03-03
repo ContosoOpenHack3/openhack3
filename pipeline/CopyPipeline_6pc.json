@@ -1,0 +1,54 @@
+{
+	"name": "CopyPipeline_6pc",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy_6pc",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "Category"
+					},
+					{
+						"name": "Destination",
+						"value": "Category"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "CosmosDbSqlApiSource",
+						"preferredRegions": []
+					},
+					"sink": {
+						"type": "CosmosDbSqlApiSink",
+						"writeBehavior": "insert"
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_6pc",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_6pc",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": []
+	}
+}
